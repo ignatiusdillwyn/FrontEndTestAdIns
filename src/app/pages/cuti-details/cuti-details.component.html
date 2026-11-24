@@ -1,0 +1,52 @@
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <p class="mb-0 fs-5">Halo, <strong>{{ displayName }}</strong></p>
+        <button class="btn btn-outline-danger btn-sm" (click)="onLogoutHandle()">Logout</button>
+    </div>
+    <div class="card shadow-sm">
+        <div class="card-header fw-semibold">Form Pengajuan Cuti</div>
+        <div class="card-body">
+            <form [formGroup]="cutiForm" (ngSubmit)="onSubmitCutiHandler()">
+                <div class="mb-3">
+                    <label for="startDate" class="form-label">Start Date</label>
+                    <input id="startDate" type="date" class="form-control" formControlName="startDate">
+                    @if (startDate?.touched && startDate?.errors?.['required']) {
+                    <p class="text-danger small mt-1">Start Date harus diisi</p>
+                    }
+                </div>
+                <div class="mb-3">
+                    <label for="endDate" class="form-label">End Date</label>
+                    <input id="endDate" type="date" class="form-control" formControlName="endDate"
+                        [min]="startDate?.value">
+                    @if (endDate?.touched && endDate?.errors?.['required']) {
+                    <p class="text-danger small mt-1">End Date harus diisi</p>
+                    }
+                    @if (endDate?.touched && cutiForm.errors?.['dateRange']) {
+                    <p class="text-danger small mt-1">End Date tidak boleh lebih kecil dari Start Date</p>
+                    }
+                </div>
+                <div class="mb-3">
+                    <label for="reason" class="form-label">Reason</label>
+                    <textarea id="reason" rows="3" class="form-control" formControlName="reason"></textarea>
+                    @if (reason?.touched) {
+                    @if (reason?.errors?.['required']) {
+                    <p class="text-danger small mt-1">Reason harus diisi</p>
+                    }
+                    @if (reason?.errors?.['minlength']) {
+                    <p class="text-danger small mt-1">Reason minimal 10 karakter</p>
+                    }
+                    @if (reason?.errors?.['maxlength']) {
+                    <p class="text-danger small mt-1">Reason maksimal 500 karakter</p>
+                    }
+                    }
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary" [disabled]="cutiForm.invalid || isSubmitting">
+                        {{ isSubmitting ? 'Mengirim...' : 'Submit' }}
+                    </button>
+                    <a class="btn btn-outline-secondary" routerLink="/home">Kembali</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
